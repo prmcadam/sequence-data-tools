@@ -43,8 +43,8 @@ def fetch_ENA_data(accession):
 	Fetch data from ENA for project of interest
 	"""
 	print "Fetching data from ENA for "+accession
-#	url='http://www.ebi.ac.uk/ena/data/warehouse/filereport?accession='+str(accession)+'&result=read_run&fields=run_accession,fastq_md5,fastq_ftp&download=text'
-	url='http://www.ebi.ac.uk/ena/data/warehouse/filereport?accession='+str(accession)+'&result=read_run&fields=run_accession,submitted_md5,submitted_ftp&download=text'
+	url='http://www.ebi.ac.uk/ena/data/warehouse/filereport?accession='+str(accession)+'&result=read_run&fields=run_accession,fastq_md5,fastq_ftp&download=text'
+#	url='http://www.ebi.ac.uk/ena/data/warehouse/filereport?accession='+str(accession)+'&result=read_run&fields=run_accession,submitted_md5,submitted_ftp&download=text'
 	req=urllib2.Request(url)
 	ENA_data=urllib2.urlopen(req).read()
 	while ENA_data.startswith('Timed out'):
@@ -60,20 +60,20 @@ def return_md5_dict(ENA_accession):
 	"""
 	md5_dict={}
 	lines=ENA_accession
-#	if lines[0].startswith('run_accession	fastq_md5	fastq_ftp') != True:
-	if lines[0].startswith('run_accession	submitted_md5	submitted_ftp') != True:
+	if lines[0].startswith('run_accession	fastq_md5	fastq_ftp') != True:
+#	if lines[0].startswith('run_accession	submitted_md5	submitted_ftp') != True:
 		return False
 	else:
 		for line in lines[1:]:
 			splitline=line.split()
 			run_accession=splitline[0].strip()
 			if ';' in line:
-				fwd_fastq=splitline[2].split(';')[0].split('/')[-1].strip()
-				rev_fastq=splitline[2].split(';')[1].split('/')[-1].strip()
-				fwd_path=splitline[2].split(';')[0]
-				rev_path=splitline[2].split(';')[1]
-				fwd_md5=splitline[1].split(';')[0].strip()
-				rev_md5=splitline[1].split(';')[1].strip()
+				fwd_fastq=splitline[2].split(';')[-2].split('/')[-1].strip()
+				rev_fastq=splitline[2].split(';')[-1].split('/')[-1].strip()
+				fwd_path=splitline[2].split(';')[-2]
+				rev_path=splitline[2].split(';')[-1]
+				fwd_md5=splitline[1].split(';')[-2].strip()
+				rev_md5=splitline[1].split(';')[-1].strip()
 				md5_dict[fwd_fastq]=[fwd_path,fwd_md5]
 				md5_dict[rev_fastq]=[rev_path,rev_md5]
 			else:
@@ -108,8 +108,8 @@ def download_missing_files(accession, missing_fastq):
 	Download any missing data from ENA
 	"""
 	with open('temp_download.txt','w') as out_file:
-#		out_file.write('run_accession	fastq_md5	fastq_ftp\n')
-		out_file.write('run_accession	submitted_md5	submitted_ftp\n')
+		out_file.write('run_accession	fastq_md5	fastq_ftp\n')
+#		out_file.write('run_accession	submitted_md5	submitted_ftp\n')
 		for fastq in missing_fastq:
 			out_file.write(accession+'\t'+fastq[1]+'\t'+fastq[0]+'\n')
 	sys.stdout.write("\nDownloading "+str(len(missing_fastq))+" fastq files from SRA\n")
