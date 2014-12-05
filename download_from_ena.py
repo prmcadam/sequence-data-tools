@@ -43,7 +43,8 @@ def fetch_ENA_data(accession):
 	Fetch data from ENA for project of interest
 	"""
 	print "Fetching data from ENA for "+accession
-	url='http://www.ebi.ac.uk/ena/data/warehouse/filereport?accession='+str(accession)+'&result=read_run&fields=run_accession,fastq_md5,fastq_ftp&download=text'
+#	url='http://www.ebi.ac.uk/ena/data/warehouse/filereport?accession='+str(accession)+'&result=read_run&fields=run_accession,fastq_md5,fastq_ftp&download=text'
+	url='http://www.ebi.ac.uk/ena/data/warehouse/filereport?accession='+str(accession)+'&result=read_run&fields=run_accession,submitted_md5,submitted_ftp&download=text'
 	req=urllib2.Request(url)
 	ENA_data=urllib2.urlopen(req).read()
 	return ENA_data.strip().split('\n')
