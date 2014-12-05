@@ -47,8 +47,10 @@ def fetch_ENA_data(accession):
 	url='http://www.ebi.ac.uk/ena/data/warehouse/filereport?accession='+str(accession)+'&result=read_run&fields=run_accession,submitted_md5,submitted_ftp&download=text'
 	req=urllib2.Request(url)
 	ENA_data=urllib2.urlopen(req).read()
-	if ENA_data.startswith('Timed out'):
-		sys.exit('!!! Connection to ENA timed out - Try again later !!!')
+	while ENA_data.startswith('Timed out'):
+		ENA_data=urllib2.urlopen(req).read()
+#	if ENA_data.startswith('Timed out'):
+#		sys.exit('!!! Connection to ENA timed out - Try again later !!!')
 	return ENA_data.strip().split('\n')
 	
 def return_md5_dict(ENA_accession):
