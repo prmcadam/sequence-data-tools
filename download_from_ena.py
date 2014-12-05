@@ -49,6 +49,7 @@ def fetch_ENA_data(accession):
 	ENA_data=urllib2.urlopen(req).read()
 	while ENA_data.startswith('Timed out'):
 		ENA_data=urllib2.urlopen(req).read()
+#	print ENA_data
 #	if ENA_data.startswith('Timed out'):
 #		sys.exit('!!! Connection to ENA timed out - Try again later !!!')
 	return ENA_data.strip().split('\n')
@@ -60,7 +61,7 @@ def return_md5_dict(ENA_accession):
 	md5_dict={}
 	lines=ENA_accession
 #	if lines[0].startswith('run_accession	fastq_md5	fastq_ftp') != True:
-	if lines[0].startswith('run_accession   submitted_md5       submitted_ftp') != True:
+	if lines[0].startswith('run_accession   submitted_md5   submitted_ftp') != True:
 		return False
 	else:
 		for line in lines[1:]:
@@ -108,7 +109,7 @@ def download_missing_files(accession, missing_fastq):
 	"""
 	with open('temp_download.txt','w') as out_file:
 #		out_file.write('run_accession	fastq_md5	fastq_ftp\n')
-		out_file.write('run_accession   submitted_md5       submitted_ftp\n')
+		out_file.write('run_accession   submitted_md5   submitted_ftp\n')
 		for fastq in missing_fastq:
 			out_file.write(accession+'\t'+fastq[1]+'\t'+fastq[0]+'\n')
 	sys.stdout.write("\nDownloading "+str(len(missing_fastq))+" fastq files from SRA\n")
