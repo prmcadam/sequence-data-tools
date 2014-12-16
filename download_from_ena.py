@@ -137,7 +137,7 @@ if __name__ == "__main__":
 		with open(test_accession,'r') as f:
 			accessions=[x.strip() for x in f]
 	else:
-		accessions=accessions.split(',')
+		accessions=test_accessions.split(',')
 		
 	directory=options.directory
 	os.chdir(directory)
