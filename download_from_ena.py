@@ -132,11 +132,11 @@ def fastq_status(fastq,exists,md5_match,correct,missing,md5_dict):
 
 if __name__ == "__main__":
 	(options,args) = opts()
-	accession=options.accession.strip().split(',')
+	accessions=options.accession.strip().split(',')
 	directory=options.directory
 	os.chdir(directory)
 
-	for i in accession:
+	for accession in accessions:
 		ENA_data=fetch_ENA_data(accession)
 		md5_dict=return_md5_dict(ENA_data)
 		if md5_dict:
