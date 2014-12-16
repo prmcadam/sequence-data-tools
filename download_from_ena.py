@@ -35,7 +35,7 @@ def opts():
 	usage = "usage: %prog [options]"
 	parser = OptionParser(usage=usage)
 	parser.add_option("-d", "--directory", dest="directory", action="store", help="path to directory of .fastq.gz files", metavar="FILE")
-	parser.add_option("-e", "--ENA", action="store", dest="accession", help="ENA project ID")
+	parser.add_option("-e", "--ENA", action="store", dest="accession", help="ENA project ID.  Can be comma separated list of accessions, or text file with one accession per line")
 	return parser.parse_args()
 
 def fetch_ENA_data(accession):
