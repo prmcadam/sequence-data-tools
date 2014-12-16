@@ -132,43 +132,17 @@ def fastq_status(fastq,exists,md5_match,correct,missing,md5_dict):
 
 if __name__ == "__main__":
 	(options,args) = opts()
-	accession=options.accession.strip()
+	accession=options.accession.strip().split(',')
 	directory=options.directory
 	os.chdir(directory)
 
-
-	ENA_data=fetch_ENA_data(accession)
-	md5_dict=return_md5_dict(ENA_data)
-	if md5_dict:
-		count=0
-		correct,absent=[],[]
-		print 'Fetched '+str(len(md5_dict))+' fastq records'
-		for fastq in md5_dict:
-			count+=1
-			sys.stdout.write("\rProcessing: "+str(count)+'/'+str(len(md5_dict)))
-			sys.stdout.flush()
-			exists=file_exists(fastq)
-			if exists:
-				file_md5=check_md5(fastq)
-				md5_match = file_md5==md5_dict[fastq][1]
-				correct,absent=fastq_status(fastq, exists,md5_match,correct,absent,md5_dict)
-			else:
-				absent.append(md5_dict[fastq])
-		download_missing_files(accession, absent)
-	else:
-		print 'Incorrect input ENA format\n'
-		sys.exit()
-
-			
-	with open('temp_download.txt','r') as new_downloads:
-		lines=new_downloads.readlines()
-		md5_dict=return_md5_dict(lines)
-		count=0
-		correct,absent=[],[]
-		if len(md5_dict)==0:
-			print 'All files successfully downloaded\n'
-		else:
-			print '\nSecond attempt\nFetched '+str(len(md5_dict))+' fastq records'
+	for i in accession:
+		ENA_data=fetch_ENA_data(accession)
+		md5_dict=return_md5_dict(ENA_data)
+		if md5_dict:
+			count=0
+			correct,absent=[],[]
+			print 'Fetched '+str(len(md5_dict))+' fastq records'
 			for fastq in md5_dict:
 				count+=1
 				sys.stdout.write("\rProcessing: "+str(count)+'/'+str(len(md5_dict)))
@@ -177,8 +151,34 @@ if __name__ == "__main__":
 				if exists:
 					file_md5=check_md5(fastq)
 					md5_match = file_md5==md5_dict[fastq][1]
-					correct,absent=fastq_status(fastq,exists,md5_match,correct,absent,md5_dict)
+					correct,absent=fastq_status(fastq, exists,md5_match,correct,absent,md5_dict)
 				else:
 					absent.append(md5_dict[fastq])
-
 			download_missing_files(accession, absent)
+		else:
+			print 'Incorrect input ENA format\n'
+			sys.exit()
+	
+				
+		with open('temp_download.txt','r') as new_downloads:
+			lines=new_downloads.readlines()
+			md5_dict=return_md5_dict(lines)
+			count=0
+			correct,absent=[],[]
+			if len(md5_dict)==0:
+				print 'All files successfully downloaded\n'
+			else:
+				print '\nSecond attempt\nFetched '+str(len(md5_dict))+' fastq records'
+				for fastq in md5_dict:
+					count+=1
+					sys.stdout.write("\rProcessing: "+str(count)+'/'+str(len(md5_dict)))
+					sys.stdout.flush()
+					exists=file_exists(fastq)
+					if exists:
+						file_md5=check_md5(fastq)
+						md5_match = file_md5==md5_dict[fastq][1]
+						correct,absent=fastq_status(fastq,exists,md5_match,correct,absent,md5_dict)
+					else:
+						absent.append(md5_dict[fastq])
+	
+				download_missing_files(accession, absent)
