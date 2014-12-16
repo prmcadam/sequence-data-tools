@@ -132,7 +132,13 @@ def fastq_status(fastq,exists,md5_match,correct,missing,md5_dict):
 
 if __name__ == "__main__":
 	(options,args) = opts()
-	accessions=options.accession.strip().split(',')
+	test_accession=options.accession.strip()
+	if os.path.isfile(test_accession):
+		with open(test_accession,'r') as f:
+			accessions=[x.strip() for x in f]
+	else:
+		accessions=accessions.split(',')
+		
 	directory=options.directory
 	os.chdir(directory)
 
