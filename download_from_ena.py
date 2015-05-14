@@ -144,7 +144,10 @@ if __name__ == "__main__":
 
 	for accession in accessions:
 		ENA_data=fetch_ENA_data(accession)
-		md5_dict=return_md5_dict(ENA_data)
+		try:
+			md5_dict=return_md5_dict(ENA_data)
+		except IndexError:
+			pass
 		if md5_dict:
 			count=0
 			correct,absent=[],[]
