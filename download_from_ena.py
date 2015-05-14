@@ -60,8 +60,8 @@ def return_md5_dict(ENA_accession):
 	"""
 	md5_dict={}
 	lines=ENA_accession
-	if lines[0].startswith('run_accession	fastq_md5	fastq_ftp') != True:
-#	if lines[0].startswith('run_accession	submitted_md5	submitted_ftp') != True:
+#	if lines[0].startswith('run_accession	fastq_md5	fastq_ftp') != True:
+	if lines[0].startswith('run_accession	submitted_md5	submitted_ftp') != True:
 		return False
 	else:
 		for line in lines[1:]:
