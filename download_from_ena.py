@@ -60,28 +60,31 @@ def return_md5_dict(ENA_accession):
 	"""
 	md5_dict={}
 	lines=ENA_accession
-	if lines[0].startswith('run_accession	fastq_md5	fastq_ftp') != True:
-#	if lines[0].startswith('run_accession	submitted_md5	submitted_ftp') != True:
+#	if lines[0].startswith('run_accession	fastq_md5	fastq_ftp') != True:
+	if lines[0].startswith('run_accession	submitted_md5	submitted_ftp') != True:
 		return False
 	else:
 		for line in lines[1:]:
-			splitline=line.split()
-			run_accession=splitline[0].strip()
-			if ';' in line:
-				fwd_fastq=splitline[2].split(';')[-2].split('/')[-1].strip()
-				rev_fastq=splitline[2].split(';')[-1].split('/')[-1].strip()
-				fwd_path=splitline[2].split(';')[-2]
-				rev_path=splitline[2].split(';')[-1]
-				fwd_md5=splitline[1].split(';')[-2].strip()
-				rev_md5=splitline[1].split(';')[-1].strip()
-				md5_dict[fwd_fastq]=[fwd_path,fwd_md5]
-				md5_dict[rev_fastq]=[rev_path,rev_md5]
-			else:
-				fwd_fastq=splitline[2].split(';')[0].split('/')[-1].strip()
-				fwd_path=splitline[2]
-				fwd_md5=splitline[1].strip()
-				md5_dict[fwd_fastq]=[fwd_path,fwd_md5]
-	return md5_dict
+			try:
+				splitline=line.split()
+				run_accession=splitline[0].strip()
+				if ';' in line:
+					fwd_fastq=splitline[2].split(';')[-2].split('/')[-1].strip()
+					rev_fastq=splitline[2].split(';')[-1].split('/')[-1].strip()
+					fwd_path=splitline[2].split(';')[-2]
+					rev_path=splitline[2].split(';')[-1]
+					fwd_md5=splitline[1].split(';')[-2].strip()
+					rev_md5=splitline[1].split(';')[-1].strip()
+					md5_dict[fwd_fastq]=[fwd_path,fwd_md5]
+					md5_dict[rev_fastq]=[rev_path,rev_md5]
+				else:
+					fwd_fastq=splitline[2].split(';')[0].split('/')[-1].strip()
+					fwd_path=splitline[2]
+					fwd_md5=splitline[1].strip()
+					md5_dict[fwd_fastq]=[fwd_path,fwd_md5]
+			except IndexError:
+				pass
+		return md5_dict
 
 def check_md5(fastq, block_size=2**20):
 	"""
