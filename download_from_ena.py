@@ -21,6 +21,7 @@ python libraries are part of core python distribution
 #To do
 #Download progress status
 #Possibly works with single end files, need to test properly
+#	Does not work with single end files, skips any in project
 #Test with downloading data other than Illumina
 
 """
